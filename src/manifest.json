@@ -1,0 +1,41 @@
+{
+  "name": "PWA Template 2025",
+  "short_name": "PWA2025",
+  "description": "Lightning-fast Progressive Web App with offline support and cutting-edge performance optimizations",
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0066cc",
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "lang": "en-US",
+  "scope": "/",
+  "id": "/?home=true",
+  "categories": ["productivity", "utilities", "development"],
+
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+
+  "screenshots": [],
+
+  "shortcuts": [],
+
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  }
+}

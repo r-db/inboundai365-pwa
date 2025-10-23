@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Chat Client Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRM Chat Client Test Suite</h1>
+
+    <div class="container">
+        <h2>Tenant Detection</h2>
+        <div id="tenant-status" class="status info">
+            Initializing tenant detection...
+        </div>
+        <div id="tenant-info"></div>
+    </div>
+
+    <div class="container">
+        <h2>Test Controls</h2>
+
+        <div class="test-section">
+            <h3>1. Get Services</h3>
+            <button onclick="testGetServices()">Test Get Services</button>
+            <div id="services-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Check Availability</h3>
+            <input type="date" id="availability-date" />
+            <button onclick="testCheckAvailability()">Check Availability</button>
+            <div id="availability-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Lookup Customer</h3>
+            <input type="tel" id="customer-phone" placeholder="+1-555-123-4567" />
+            <button onclick="testLookupCustomer()">Lookup Customer</button>
+            <div id="lookup-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Book Appointment</h3>
+            <input type="text" id="booking-name" placeholder="John Doe" />
+            <input type="tel" id="booking-phone" placeholder="+1-555-123-4567" />
+            <input type="datetime-local" id="booking-datetime" />
+            <select id="booking-service">
+                <option value="">Select Service</option>
+            </select>
+            <button onclick="testBookAppointment()">Book Appointment</button>
+            <div id="booking-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>5. Get Business Hours</h3>
+            <button onclick="testGetBusinessHours()">Get Business Hours</button>
+            <div id="hours-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>6. Send Chat Message (with CRM context)</h3>
+            <input type="text" id="chat-message" placeholder="Enter message..." style="width: 400px;" />
+            <button onclick="testSendMessage()">Send Message</button>
+            <div id="chat-result"></div>
+        </div>
+    </div>
+
+    <!-- Configure tenant for testing -->
+    <script>
+        // For testing, set tenant ID directly
+        // In production, this would come from subdomain or path
+        window.TENANT_CONFIG = {
+            tenantId: 'd028a288-877a-4b9b-ae9e-ce4fb2806ee3'  // Test tenant from test script
+        };
+    </script>
+
+    <!-- Load chat client modules -->
+    <script type="module">
+        import CRMChatClient from './js/crm-chat-client.js';
+
+        // Initialize client
+        window.crmClient = new CRMChatClient();
+
+        // Wait for tenant initialization
+        setTimeout(() => {
+            displayTenantInfo();
+            loadServicesForBooking();
+        }, 1000);
+
+        function displayTenantInfo() {
+            const statusEl = document.getElementById('tenant-status');
+            const infoEl = document.getElementById('tenant-info');
+
+            if (window.crmClient.hasTenant()) {
+                statusEl.className = 'status success';
+                statusEl.textContent = '✓ Tenant successfully detected and initialized';
+
+                const tenant = window.crmClient.getTenantInfo();
+                if (tenant) {
+                    infoEl.innerHTML = `
+                        <pre>${JSON.stringify(tenant, null, 2)}</pre>
+                    `;
+                }
+            } else {
+                statusEl.className = 'status error';
+                statusEl.textContent = '✗ No tenant detected. Using fallback configuration.';
+
+                if (window.crmClient.tenantId) {
+                    infoEl.innerHTML = `<p>Tenant ID: ${window.crmClient.tenantId}</p>`;
+                }
+            }
+        }
+
+        async function loadServicesForBooking() {
+            try {
+                const services = await window.crmClient.getServices();
+                const select = document.getElementById('booking-service');
+
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = `${service.name} - $${service.price} (${service.duration_minutes}min)`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load services:', error);
+            }
+        }
+
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('availability-date').value = tomorrow.toISOString().split('T')[0];
+        document.getElementById('booking-datetime').value = tomorrow.toISOString().slice(0, 16);
+
+        // Export test functions globally
+        window.testGetServices = async function() {
+            const resultEl = document.getElementById('services-result');
+            try {
+                resultEl.innerHTML = '<div class="status info">Loading...</div>';
+                const services = await window.crmClient.getServices();
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Services loaded successfully</div>
+                    <pre>${JSON.stringify(services, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+
+        window.testCheckAvailability = async function() {
+            const resultEl = document.getElementById('availability-result');
+            const date = document.getElementById('availability-date').value;
+
+            try {
+                resultEl.innerHTML = '<div class="status info">Checking availability...</div>';
+                const availability = await window.crmClient.checkAvailability(date);
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Availability check complete</div>
+                    <pre>${JSON.stringify(availability, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+
+        window.testLookupCustomer = async function() {
+            const resultEl = document.getElementById('lookup-result');
+            const phone = document.getElementById('customer-phone').value;
+
+            try {
+                resultEl.innerHTML = '<div class="status info">Looking up customer...</div>';
+                const customer = await window.crmClient.lookupCustomer(phone);
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Customer found</div>
+                    <pre>${JSON.stringify(customer, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+
+        window.testBookAppointment = async function() {
+            const resultEl = document.getElementById('booking-result');
+            const name = document.getElementById('booking-name').value;
+            const phone = document.getElementById('booking-phone').value;
+            const datetime = document.getElementById('booking-datetime').value;
+            const serviceId = document.getElementById('booking-service').value;
+
+            if (!name || !phone || !datetime) {
+                resultEl.innerHTML = '<div class="status error">Please fill in all required fields</div>';
+                return;
+            }
+
+            try {
+                resultEl.innerHTML = '<div class="status info">Booking appointment...</div>';
+                const booking = await window.crmClient.bookAppointment({
+                    customer_name: name,
+                    customer_phone: phone,
+                    appointment_date: new Date(datetime).toISOString(),
+                    service_id: serviceId || null
+                });
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Appointment booked successfully</div>
+                    <pre>${JSON.stringify(booking, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+
+        window.testGetBusinessHours = async function() {
+            const resultEl = document.getElementById('hours-result');
+
+            try {
+                resultEl.innerHTML = '<div class="status info">Loading business hours...</div>';
+                const hours = await window.crmClient.getBusinessHours();
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Business hours loaded</div>
+                    <pre>${JSON.stringify(hours, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+
+        window.testSendMessage = async function() {
+            const resultEl = document.getElementById('chat-result');
+            const message = document.getElementById('chat-message').value;
+
+            if (!message) {
+                resultEl.innerHTML = '<div class="status error">Please enter a message</div>';
+                return;
+            }
+
+            try {
+                resultEl.innerHTML = '<div class="status info">Sending message...</div>';
+                const response = await window.crmClient.sendMessage(message, 'openai');
+                resultEl.innerHTML = `
+                    <div class="status success">✓ Response received</div>
+                    <pre>${JSON.stringify(response, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="status error">✗ Error: ${error.message}</div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

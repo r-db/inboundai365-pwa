@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Essential Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PWA Template 2025 | Lightning-Fast Progressive Web App</title>
+  <meta name="description" content="Production-ready Progressive Web App template with cutting-edge performance optimizations, offline-first architecture, and instant navigation capabilities">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://example.com/">
+
+  <!-- Preconnect to required origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PWA Template 2025">
+  <meta property="og:description" content="Production-ready Progressive Web App template with cutting-edge performance optimizations">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:site_name" content="PWA Template 2025">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PWA Template 2025">
+  <meta name="twitter:description" content="Production-ready Progressive Web App template">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PWA 2025">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PWA Template 2025",
+    "url": "https://example.com",
+    "description": "Production-ready Progressive Web App template"
+  }
+  </script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/design-tokens.css">
+  <link rel="stylesheet" href="/css/globals.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/view-transitions.css">
+</head>
+<body>
+  <!-- Skip to main content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__container container">
+      <a href="/" class="logo">PWA 2025</a>
+
+      <nav class="nav-primary" role="navigation" aria-label="Main">
+        <a href="/" class="nav-link" data-transition="slide">Home</a>
+        <a href="/about" class="nav-link" data-transition="fade">About</a>
+        <a href="/features" class="nav-link" data-transition="zoom">Features</a>
+        <a href="/docs" class="nav-link" data-transition="slide">Documentation</a>
+        <a href="/contact" class="nav-link" data-transition="slide">Contact</a>
+      </nav>
+
+      <div class="header__actions">
+        <button id="install-button" class="btn btn--primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Install App
+        </button>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span id="theme-icon-light" class="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </span>
+          <span id="theme-icon-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="nav-menu" class="nav-mobile hidden">
+      <nav class="container">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/features" class="nav-link">Features</a>
+        <a href="/docs" class="nav-link">Documentation</a>
+        <a href="/contact" class="nav-link">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" tabindex="-1">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1 class="hero__title">
+          Welcome to <span style="color: var(--color-primary);">PWA Template 2025</span>
+        </h1>
+        <p class="hero__subtitle">
+          A production-ready Progressive Web App template with cutting-edge performance optimizations, offline-first architecture, and instant navigation capabilities.
+        </p>
+        <div class="hero__actions">
+          <a href="/features" class="btn btn--primary btn--lg">Explore Features</a>
+          <a href="/contact" class="btn btn--secondary btn--lg">Get Started</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="section">
+      <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--spacing-8);">Key Features</h2>
+        <div class="grid">
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+            </div>
+            <h3 class="card__title">Lightning Fast</h3>
+            <p class="card__description">Optimized for Core Web Vitals with instant page transitions and sub-100ms response times.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <h3 class="card__title">Progressive Web App</h3>
+            <p class="card__description">Installable, offline-capable, and works seamlessly across all devices and platforms.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+            </div>
+            <h3 class="card__title">Modern Design</h3>
+            <p class="card__description">Beautiful UI with dark mode support, smooth animations, and accessible components.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3 class="card__title">Security First</h3>
+            <p class="card__description">Built-in CSP, XSS protection, input sanitization, and GDPR-compliant consent management.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3 class="card__title">Privacy Focused</h3>
+            <p class="card__description">Privacy-first analytics, no tracking cookies, and full control over data collection.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01"/><path d="M16 15.5v.01"/><path d="M12 12v.01"/><path d="M11 17v.01"/><path d="M7 14v.01"/></svg>
+            </div>
+            <h3 class="card__title">Developer Friendly</h3>
+            <p class="card__description">Clean code architecture, comprehensive documentation, and easy customization.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <h3 class="card__title">Multi-Channel Platform</h3>
+            <p class="card__description">Phone, web, and mobile—all connected to one system. Customers reach you however they want.</p>
+          </div>
+
+          <div class="card">
+            <div class="card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <h3 class="card__title">24/7 Availability</h3>
+            <p class="card__description">Never miss an opportunity—nights, weekends, and holidays. Always available when your customers need you.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="story-section">
+      <div class="story-container">
+        <!-- Story Hero - Your Story Starts Here -->
+        <div class="story-chapter story-chapter--hero scroll-reveal">
+          <div class="story-chapter__content story-chapter__content--center">
+            <span class="story-chapter__label">Welcome</span>
+            <h2 class="story-chapter__title">Your Story Starts Here</h2>
+            <p class="story-chapter__text">
+              We've built the foundation. Now it's your turn to create something extraordinary. Whether you're launching a startup, building an enterprise application, or creating the next big thing—you have everything you need to succeed.
+            </p>
+            <div class="story-cta">
+              <a href="/features" class="btn btn--primary btn--lg">Start Building</a>
+              <a href="/docs" class="btn btn--secondary btn--lg">Read Documentation</a>
+            </div>
+          </div>
+          <div class="story-chapter__media story-chapter__media--fullwidth">
+            <div class="story-media-placeholder story-media-placeholder--hero">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+              <p>Video: Your Journey Begins</p>
+            </div>
+            <!-- Replace with actual video:
+            <video class="story-video story-video--hero" controls poster="/images/hero-video-poster.jpg">
+              <source src="/videos/your-story.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            -->
+          </div>
+        </div>
+
+        <!-- Story Chapter 1 -->
+        <div class="story-chapter story-chapter--left scroll-reveal">
+          <div class="story-chapter__media">
+            <div class="story-media-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              <p>Video: Product Overview</p>
+            </div>
+            <!-- Replace with actual video:
+            <video class="story-video" controls poster="/images/video-poster.jpg">
+              <source src="/videos/product-overview.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            -->
+          </div>
+          <div class="story-chapter__content">
+            <span class="story-chapter__label">Chapter 01</span>
+            <h2 class="story-chapter__title">Built for the Future</h2>
+            <p class="story-chapter__text">
+              In a world where every millisecond counts, we've crafted an experience that doesn't just meet expectations—it exceeds them. Our progressive web app technology delivers app-like experiences through the web, combining the reach of the internet with the engagement of native applications.
+            </p>
+            <p class="story-chapter__text">
+              From the moment you interact with our platform, you'll notice the difference. Instant page loads, smooth animations, and seamless transitions create an experience that feels native, responsive, and alive.
+            </p>
+          </div>
+        </div>
+
+        <!-- Story Chapter 2 -->
+        <div class="story-chapter story-chapter--right scroll-reveal">
+          <div class="story-chapter__content">
+            <span class="story-chapter__label">Chapter 02</span>
+            <h2 class="story-chapter__title">Works Everywhere, Anytime</h2>
+            <p class="story-chapter__text">
+              Your users don't live in a perfect world of constant connectivity. Neither should your application. Our offline-first architecture ensures that your experience continues seamlessly, whether you're on a train passing through a tunnel or in a coffee shop with spotty WiFi.
+            </p>
+            <p class="story-chapter__text">
+              Install it on your home screen. Use it like an app. Access it offline. It's the web, evolved—bringing together the best of both worlds without compromise.
+            </p>
+          </div>
+          <div class="story-chapter__media">
+            <div class="story-media-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <p>Image: Offline Capability</p>
+            </div>
+            <!-- Replace with actual image:
+            <img src="/images/offline-capability.jpg" alt="Offline capability demonstration" class="story-image" loading="lazy">
+            -->
+          </div>
+        </div>
+
+        <!-- Story Chapter 3 -->
+        <div class="story-chapter story-chapter--left scroll-reveal">
+          <div class="story-chapter__media">
+            <div class="story-media-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+              <p>Image: Modern Design</p>
+            </div>
+            <!-- Replace with actual image:
+            <img src="/images/modern-design.jpg" alt="Modern design showcase" class="story-image" loading="lazy">
+            -->
+          </div>
+          <div class="story-chapter__content">
+            <span class="story-chapter__label">Chapter 03</span>
+            <h2 class="story-chapter__title">Beautiful by Design</h2>
+            <p class="story-chapter__text">
+              Great technology deserves great design. Every pixel, every animation, every interaction has been carefully considered to create an experience that's not just functional, but delightful.
+            </p>
+            <p class="story-chapter__text">
+              Dark mode that's easy on the eyes. Smooth transitions that guide attention. Accessible components that work for everyone. Design isn't just how it looks—it's how it works, and how it makes you feel.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>This website was built by <a href="https://ib365.ai" target="_blank" rel="noopener noreferrer" class="footer__link">InboundAI365</a> Powered by <a href="https://riscent.com" target="_blank" rel="noopener noreferrer" class="footer__link">Riscent, LLC</a>.</p>
+      <div class="footer__links">
+        <a href="/privacy" class="footer__link">Privacy Policy</a>
+        <a href="/terms" class="footer__link">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ARIA Live Region for Announcements -->
+  <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+  
+  <!-- Tenant Configuration Loader -->
+  <script src="/js/tenant-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+/* View Transitions API Styles */
+
+@supports (view-transition-name: none) {
+  /* Root transitions */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Default slide transition */
+  [data-transition-type="slide"]::view-transition-old(root) {
+    animation-name: slide-out;
+  }
+
+  [data-transition-type="slide"]::view-transition-new(root) {
+    animation-name: slide-in;
+  }
+
+  /* Fade transition */
+  [data-transition-type="fade"]::view-transition-old(root) {
+    animation-name: fade-out;
+  }
+
+  [data-transition-type="fade"]::view-transition-new(root) {
+    animation-name: fade-in;
+  }
+
+  /* Zoom transition */
+  [data-transition-type="zoom"]::view-transition-old(root) {
+    animation-name: zoom-out;
+  }
+
+  [data-transition-type="zoom"]::view-transition-new(root) {
+    animation-name: zoom-in;
+  }
+
+  /* Back navigation */
+  .back-transition::view-transition-new(root) {
+    animation-name: slide-out-reverse;
+  }
+
+  .back-transition::view-transition-old(root) {
+    animation-name: slide-in-reverse;
+    z-index: 1;
+  }
+
+  /* Named transitions for specific elements */
+  .hero-image {
+    view-transition-name: hero;
+  }
+
+  .nav-header {
+    view-transition-name: header;
+  }
+
+  .main-content {
+    view-transition-name: main;
+  }
+
+  /* Animations */
+  @keyframes slide-out {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(-30%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-out-reverse {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-reverse {
+    from {
+      transform: translateX(-30%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes zoom-out {
+    from {
+      transform: scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  @keyframes zoom-in {
+    from {
+      transform: scale(1.2);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+/* Mobile-optimized transitions */
+@media (max-width: 768px) and (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 200ms;
+  }
+}
+
+/* Reduced motion override */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1ms !important;
+  }
+}

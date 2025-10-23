@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Essential Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AI Chat | PWA Template 2025</title>
+  <meta name="description" content="Chat with AI assistant powered by OpenAI and Anthropic">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://example.com/chat">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI Chat | PWA Template 2025">
+  <meta property="og:description" content="Chat with AI assistant">
+  <meta property="og:url" content="https://example.com/chat">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+</head>
+<body>
+  <!-- Skip to main content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__container container">
+      <a href="/" class="logo">PWA 2025</a>
+
+      <nav class="nav-primary" role="navigation" aria-label="Main">
+        <a href="/" class="nav-link" data-transition="slide">Home</a>
+        <a href="/about" class="nav-link" data-transition="fade">About</a>
+        <a href="/features" class="nav-link" data-transition="zoom">Features</a>
+        <a href="/docs" class="nav-link" data-transition="slide">Documentation</a>
+        <a href="/chat" class="nav-link active" data-transition="slide">AI Chat</a>
+        <a href="/contact" class="nav-link" data-transition="slide">Contact</a>
+      </nav>
+
+      <div class="header__actions">
+        <button id="install-button" class="btn btn--primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Install App
+        </button>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span id="theme-icon-light" class="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </span>
+          <span id="theme-icon-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="nav-menu" class="nav-mobile hidden">
+      <nav class="container">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/features" class="nav-link">Features</a>
+        <a href="/docs" class="nav-link">Documentation</a>
+        <a href="/chat" class="nav-link active">AI Chat</a>
+        <a href="/contact" class="nav-link">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" tabindex="-1">
+    <!-- Page Header -->
+    <section class="page-header">
+      <div class="container">
+        <h1 class="page-header__title">AI Assistant</h1>
+        <p class="page-header__subtitle">
+          Chat with powerful AI models powered by OpenAI and Anthropic
+        </p>
+      </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+      <div class="container">
+        <div class="chat-container">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-controls">
+              <label for="provider-select" class="sr-only">Select AI Provider</label>
+              <select id="provider-select" class="provider-select" aria-label="Select AI provider">
+                <option value="openai">OpenAI GPT-4</option>
+                <option value="claude">Claude 3.5 Sonnet</option>
+              </select>
+
+              <label for="stream-toggle" class="toggle-label">
+                <input type="checkbox" id="stream-toggle" checked>
+                <span>Stream responses</span>
+              </label>
+
+              <button id="clear-chat" class="btn btn--secondary btn--sm" aria-label="Clear conversation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                Clear
+              </button>
+            </div>
+
+            <div id="backend-status" class="backend-status" role="status">
+              <span class="status-indicator"></span>
+              <span class="status-text">Checking connection...</span>
+            </div>
+          </div>
+
+          <!-- Chat Messages -->
+          <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-atomic="false">
+            <div class="chat-welcome">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <h2>Welcome to AI Chat</h2>
+              <p>Start a conversation with our AI assistant. Choose your preferred model and ask anything!</p>
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <form id="chat-form" class="chat-form">
+            <label for="chat-input" class="sr-only">Type your message</label>
+            <textarea
+              id="chat-input"
+              class="chat-input"
+              placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+              rows="1"
+              required
+              aria-label="Chat message input"
+            ></textarea>
+
+            <button type="submit" id="send-button" class="chat-submit" aria-label="Send message">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+            </button>
+
+            <button type="button" id="stop-button" class="chat-stop hidden" aria-label="Stop generation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>This website was built by <a href="https://ib365.ai" target="_blank" rel="noopener noreferrer" class="footer__link">InboundAI365</a> Powered by <a href="https://riscent.com" target="_blank" rel="noopener noreferrer" class="footer__link">Riscent, LLC</a>.</p>
+      <div class="footer__links">
+        <a href="/privacy" class="footer__link">Privacy Policy</a>
+        <a href="/terms" class="footer__link">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ARIA Live Region for Announcements -->
+  <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "ib365-pwa-template",
+  "alias": ["pwa.ib365.ai"],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.ib365.ai"
+  }
+}

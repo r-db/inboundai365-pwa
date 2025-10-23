@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Console - InboundAI365</title>
+    <link rel="stylesheet" href="/css/globals.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div id="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <h1>InboundAI365 Admin Console</h1>
+                <div class="header-actions">
+                    <span id="admin-user" class="admin-user"></span>
+                    <button id="logout-btn" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-view="dashboard">
+                <span>📊</span> Dashboard
+            </button>
+            <button class="nav-btn" data-view="onboarding">
+                <span>➕</span> Onboard Tenant
+            </button>
+            <button class="nav-btn" data-view="tenants">
+                <span>🏢</span> Manage Tenants
+            </button>
+            <button class="nav-btn" data-view="numbers">
+                <span>📞</span> Phone Numbers
+            </button>
+            <button class="nav-btn" data-view="agents">
+                <span>🤖</span> AI Agents
+            </button>
+            <button class="nav-btn" data-view="system">
+                <span>⚙️</span> System Health
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="admin-view active">
+                <h2>System Overview</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏢</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Active Tenants</div>
+                            <div class="stat-value" id="stat-tenants">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📞</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total Calls (30d)</div>
+                            <div class="stat-value" id="stat-calls">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Revenue (30d)</div>
+                            <div class="stat-value" id="stat-revenue">-</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🤖</div>
+                        <div class="stat-content">
+                            <div class="stat-label">Active Agents</div>
+                            <div class="stat-value" id="stat-agents">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity-list" class="activity-list">
+                        <!-- Activity items will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onboarding View -->
+            <div id="onboarding-view" class="admin-view">
+                <h2>Onboard New Tenant</h2>
+                
+                <div class="onboarding-wizard">
+                    <!-- Step 1: Business Information -->
+                    <div class="wizard-step active" data-step="1">
+                        <h3>Step 1: Business Information</h3>
+                        
+                        <form id="business-info-form" class="admin-form">
+                            <div class="form-group">
+                                <label for="business-name">Business Name *</label>
+                                <input type="text" id="business-name" required 
+                                       placeholder="Dr. Smith Dental Practice">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="business-type">Business Type *</label>
+                                <select id="business-type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="dental">Dental Practice</option>
+                                    <option value="medical">Medical Practice</option>
+                                    <option value="legal">Legal Services</option>
+                                    <option value="hvac">HVAC Services</option>
+                                    <option value="plumbing">Plumbing Services</option>
+                                    <option value="automotive">Automotive Services</option>
+                                    <option value="real_estate">Real Estate</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contact-name">Contact Name *</label>
+                                    <input type="text" id="contact-name" required 
+                                           placeholder="John Smith">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact-email">Contact Email *</label>
+                                    <input type="email" id="contact-email" required 
+                                           placeholder="john@business.com">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contact-phone">Contact Phone *</label>
+                                    <input type="tel" id="contact-phone" required 
+                                           placeholder="+1 555-123-4567">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="business-website">Website</label>
+                                    <input type="url" id="business-website" 
+                                           placeholder="https://business.com">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    Next: Location →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Location & Hours -->
+                    <div class="wizard-step" data-step="2">
+                        <h3>Step 2: Location & Business Hours</h3>
+                        
+                        <form id="location-form" class="admin-form">
+                            <div class="form-group">
+                                <label for="address">Street Address *</label>
+                                <input type="text" id="address" required 
+                                       placeholder="123 Main St">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">City *</label>
+                                    <input type="text" id="city" required 
+                                           placeholder="Boston">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="state">State *</label>
+                                    <input type="text" id="state" required 
+                                           placeholder="MA" maxlength="2">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="zip">ZIP Code *</label>
+                                    <input type="text" id="zip" required 
+                                           placeholder="02101">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Business Hours</label>
+                                <div id="business-hours" class="business-hours-grid">
+                                    <!-- Hours will be inserted here -->
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" data-back="1">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    Next: Subscription →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 3: Subscription Plan -->
+                    <div class="wizard-step" data-step="3">
+                        <h3>Step 3: Select Plan & Configure</h3>
+                        
+                        <form id="subscription-form" class="admin-form">
+                            <div class="form-group">
+                                <label>Select Plan *</label>
+                                <div class="plan-cards">
+                                    <div class="plan-card" data-plan="starter">
+                                        <h4>Starter</h4>
+                                        <div class="plan-price">$99<span>/mo</span></div>
+                                        <ul class="plan-features">
+                                            <li>500 minutes included</li>
+                                            <li>1 phone number</li>
+                                            <li>Basic CRM</li>
+                                            <li>Email support</li>
+                                        </ul>
+                                        <button type="button" class="btn-outline">Select</button>
+                                    </div>
+                                    
+                                    <div class="plan-card featured" data-plan="professional">
+                                        <div class="badge">Most Popular</div>
+                                        <h4>Professional</h4>
+                                        <div class="plan-price">$199<span>/mo</span></div>
+                                        <ul class="plan-features">
+                                            <li>2000 minutes included</li>
+                                            <li>3 phone numbers</li>
+                                            <li>Full CRM</li>
+                                            <li>Priority support</li>
+                                        </ul>
+                                        <button type="button" class="btn-primary">Select</button>
+                                    </div>
+                                    
+                                    <div class="plan-card" data-plan="enterprise">
+                                        <h4>Enterprise</h4>
+                                        <div class="plan-price">$499<span>/mo</span></div>
+                                        <ul class="plan-features">
+                                            <li>10,000 minutes included</li>
+                                            <li>Unlimited numbers</li>
+                                            <li>Custom CRM integration</li>
+                                            <li>Dedicated support</li>
+                                        </ul>
+                                        <button type="button" class="btn-outline">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" id="selected-plan" required>
+                            
+                            <div class="form-group">
+                                <label for="starting-balance">Starting Wallet Balance</label>
+                                <input type="number" id="starting-balance" 
+                                       value="50" min="0" step="10"
+                                       placeholder="50">
+                                <small>Initial credit for phone calls</small>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" data-back="2">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    Next: Phone Number →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 4: Phone Number -->
+                    <div class="wizard-step" data-step="4">
+                        <h3>Step 4: Assign Phone Number</h3>
+                        
+                        <form id="phone-number-form" class="admin-form">
+                            <div class="form-group">
+                                <label>Choose Assignment Method</label>
+                                <div class="radio-group">
+                                    <label>
+                                        <input type="radio" name="number-method" value="existing" checked>
+                                        Assign Existing Number
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="number-method" value="new">
+                                        Purchase New Number
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div id="existing-numbers-section" class="form-group">
+                                <label for="existing-number">Available Numbers</label>
+                                <select id="existing-number" size="5">
+                                    <!-- Available numbers will be loaded here -->
+                                </select>
+                                <button type="button" id="refresh-numbers-btn" class="btn-link">
+                                    🔄 Refresh Available Numbers
+                                </button>
+                            </div>
+                            
+                            <div id="new-number-section" class="form-group" style="display: none;">
+                                <label for="area-code">Preferred Area Code</label>
+                                <input type="text" id="area-code" 
+                                       placeholder="617" maxlength="3"
+                                       pattern="[0-9]{3}">
+                                <button type="button" id="search-numbers-btn" class="btn-secondary">
+                                    Search Available Numbers
+                                </button>
+                                <div id="search-results" class="search-results">
+                                    <!-- Search results will appear here -->
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" data-back="3">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    Next: AI Agent →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 5: AI Agent Configuration -->
+                    <div class="wizard-step" data-step="5">
+                        <h3>Step 5: Configure AI Agent</h3>
+                        
+                        <form id="agent-form" class="admin-form">
+                            <div class="form-group">
+                                <label for="agent-name">Agent Name</label>
+                                <input type="text" id="agent-name" 
+                                       placeholder="AVEENA Assistant"
+                                       value="AVEENA">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="greeting">Greeting Message *</label>
+                                <textarea id="greeting" rows="3" required
+                                    placeholder="Thank you for calling [Business Name]. This is AVEENA, your AI assistant. How can I help you today?"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="voice-id">Voice Selection</label>
+                                <select id="voice-id">
+                                    <option value="sarah">Sarah (Female, Professional)</option>
+                                    <option value="james">James (Male, Friendly)</option>
+                                    <option value="emily">Emily (Female, Warm)</option>
+                                    <option value="michael">Michael (Male, Authoritative)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Enable Features</label>
+                                <div class="checkbox-group">
+                                    <label>
+                                        <input type="checkbox" name="features" value="appointment_booking" checked>
+                                        Appointment Booking
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="features" value="customer_lookup" checked>
+                                        Customer Lookup
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="features" value="availability_check" checked>
+                                        Availability Check
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="features" value="send_confirmation" checked>
+                                        Send Confirmations
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="knowledge-base">Knowledge Base (Optional)</label>
+                                <textarea id="knowledge-base" rows="4"
+                                    placeholder="Add specific information about your business, services, policies, etc. that the AI should know..."></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" data-back="4">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    Review & Complete →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 6: Review & Complete -->
+                    <div class="wizard-step" data-step="6">
+                        <h3>Step 6: Review & Complete Onboarding</h3>
+                        
+                        <div class="review-section">
+                            <h4>Business Information</h4>
+                            <dl id="review-business"></dl>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4>Location & Hours</h4>
+                            <dl id="review-location"></dl>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4>Subscription</h4>
+                            <dl id="review-subscription"></dl>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4>Phone Number</h4>
+                            <dl id="review-phone"></dl>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4>AI Agent</h4>
+                            <dl id="review-agent"></dl>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" data-back="5">
+                                ← Back to Edit
+                            </button>
+                            <button type="button" id="complete-onboarding-btn" class="btn-success">
+                                ✓ Complete Onboarding
+                            </button>
+                        </div>
+                        
+                        <div id="onboarding-progress" class="progress-section" style="display: none;">
+                            <h4>Setting Up Tenant...</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div id="progress-status" class="progress-status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tenants View -->
+            <div id="tenants-view" class="admin-view">
+                <h2>Manage Tenants</h2>
+                
+                <div class="view-controls">
+                    <input type="text" id="tenant-search" placeholder="Search tenants..." class="search-input">
+                    <button id="refresh-tenants-btn" class="btn-secondary">🔄 Refresh</button>
+                </div>
+                
+                <div id="tenants-list" class="tenants-grid">
+                    <!-- Tenant cards will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Phone Numbers View -->
+            <div id="numbers-view" class="admin-view">
+                <h2>Phone Number Management</h2>
+                
+                <div class="view-controls">
+                    <button id="purchase-number-btn" class="btn-primary">+ Purchase Number</button>
+                    <button id="refresh-numbers-list-btn" class="btn-secondary">🔄 Refresh</button>
+                </div>
+                
+                <div id="numbers-list" class="numbers-table">
+                    <!-- Phone numbers table will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Agents View -->
+            <div id="agents-view" class="admin-view">
+                <h2>AI Agents</h2>
+                
+                <div id="agents-list" class="agents-grid">
+                    <!-- Agent cards will be inserted here -->
+                </div>
+            </div>
+
+            <!-- System Health View -->
+            <div id="system-view" class="admin-view">
+                <h2>System Health</h2>
+                
+                <div class="health-grid">
+                    <div class="health-card">
+                        <h4>API Health</h4>
+                        <div id="api-health" class="health-status">Checking...</div>
+                    </div>
+                    
+                    <div class="health-card">
+                        <h4>Database</h4>
+                        <div id="db-health" class="health-status">Checking...</div>
+                    </div>
+                    
+                    <div class="health-card">
+                        <h4>ElevenLabs</h4>
+                        <div id="elevenlabs-health" class="health-status">Checking...</div>
+                    </div>
+                    
+                    <div class="health-card">
+                        <h4>Vonage</h4>
+                        <div id="vonage-health" class="health-status">Checking...</div>
+                    </div>
+                </div>
+                
+                <div class="logs-section">
+                    <h3>Recent System Logs</h3>
+                    <div id="system-logs" class="logs-container">
+                        <!-- Logs will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p id="loading-message">Loading...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/admin.js" type="module"></script>
+</body>
+</html>

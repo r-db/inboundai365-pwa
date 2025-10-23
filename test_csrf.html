@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF Test</title>
+</head>
+<body>
+    <h1>CSRF Protection Test</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        async function runTests() {
+            results.innerHTML += '<h2>Testing CSRF Protection...</h2>';
+
+            // Test 1: POST without CSRF token (should fail)
+            results.innerHTML += '<h3>Test 1: POST without CSRF token</h3>';
+            try {
+                const response = await fetch('http://localhost:5001/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'test' })
+                });
+                results.innerHTML += `<p style="color: red">❌ FAILED: Request succeeded without CSRF token (status: ${response.status})</p>`;
+            } catch (error) {
+                results.innerHTML += `<p style="color: orange">⚠️ Request failed (expected): ${error.message}</p>`;
+            }
+
+            // Test 2: Get CSRF token
+            results.innerHTML += '<h3>Test 2: Get CSRF token</h3>';
+            let csrfToken = null;
+            try {
+                const response = await fetch('http://localhost:5001/api/csrf-token', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                csrfToken = data.csrf_token;
+                results.innerHTML += `<p style="color: green">✅ Got CSRF token: ${csrfToken.substring(0, 20)}...</p>`;
+            } catch (error) {
+                results.innerHTML += `<p style="color: red">❌ Failed to get CSRF token: ${error.message}</p>`;
+                return;
+            }
+
+            // Test 3: POST with CSRF token (should succeed)
+            results.innerHTML += '<h3>Test 3: POST with CSRF token</h3>';
+            try {
+                const response = await fetch('http://localhost:5001/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ message: 'Hello, this is a CSRF test!' })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    results.innerHTML += `<p style="color: green">✅ SUCCESS: Chat API responded with CSRF token</p>`;
+                    results.innerHTML += `<p>Response: ${data.message.substring(0, 100)}...</p>`;
+                } else {
+                    results.innerHTML += `<p style="color: red">❌ FAILED: Status ${response.status}</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p style="color: red">❌ Failed: ${error.message}</p>`;
+            }
+
+            results.innerHTML += '<h2>Tests Complete!</h2>';
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

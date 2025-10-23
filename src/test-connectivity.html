@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connectivity Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    h1 { color: #00ff00; }
+    .test {
+      margin: 20px 0;
+      padding: 15px;
+      background: #2a2a2a;
+      border-left: 4px solid #00ff00;
+    }
+    .test.fail {
+      border-left-color: #ff0000;
+    }
+    .test h3 {
+      margin: 0 0 10px 0;
+      color: #00ff00;
+    }
+    .test.fail h3 {
+      color: #ff0000;
+    }
+    .result {
+      padding: 10px;
+      background: #000;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    .error {
+      color: #ff0000;
+    }
+    .success {
+      color: #00ff00;
+    }
+    button {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px;
+    }
+    button:hover {
+      background: #00cc00;
+    }
+    #summary {
+      padding: 20px;
+      background: #2a2a2a;
+      margin-bottom: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Frontend → Backend Connectivity Test</h1>
+
+  <div id="summary">
+    <div>Status: <span id="status">Not tested</span></div>
+    <div>Tests Run: <span id="tests-run">0</span></div>
+    <div>Passed: <span id="tests-passed">0</span></div>
+    <div>Failed: <span id="tests-failed">0</span></div>
+  </div>
+
+  <button onclick="runAllTests()">Run All Tests</button>
+  <button onclick="clearResults()">Clear Results</button>
+
+  <div id="test-results"></div>
+
+  <script>
+    let testsRun = 0;
+    let testsPassed = 0;
+    let testsFailed = 0;
+
+    function updateSummary() {
+      document.getElementById('tests-run').textContent = testsRun;
+      document.getElementById('tests-passed').textContent = testsPassed;
+      document.getElementById('tests-failed').textContent = testsFailed;
+
+      const statusEl = document.getElementById('status');
+      if (testsRun === 0) {
+        statusEl.textContent = 'Not tested';
+        statusEl.style.color = '#999';
+      } else if (testsFailed === 0) {
+        statusEl.textContent = 'ALL PASS ✅';
+        statusEl.style.color = '#00ff00';
+      } else {
+        statusEl.textContent = 'FAILURES ❌';
+        statusEl.style.color = '#ff0000';
+      }
+    }
+
+    function addTestResult(name, success, data, error = null) {
+      testsRun++;
+      if (success) {
+        testsPassed++;
+      } else {
+        testsFailed++;
+      }
+
+      const testDiv = document.createElement('div');
+      testDiv.className = 'test' + (success ? '' : ' fail');
+
+      const title = document.createElement('h3');
+      title.textContent = `${success ? '✅' : '❌'} ${name}`;
+      testDiv.appendChild(title);
+
+      const result = document.createElement('div');
+      result.className = 'result ' + (success ? 'success' : 'error');
+
+      if (success) {
+        result.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      } else {
+        result.textContent = `ERROR: ${error}\n\nDetails: ${JSON.stringify(data, null, 2)}`;
+      }
+
+      testDiv.appendChild(result);
+      document.getElementById('test-results').appendChild(testDiv);
+      updateSummary();
+    }
+
+    function clearResults() {
+      document.getElementById('test-results').innerHTML = '';
+      testsRun = 0;
+      testsPassed = 0;
+      testsFailed = 0;
+      updateSummary();
+    }
+
+    // Test 1: Basic fetch to backend health
+    async function testBasicFetch() {
+      console.log('Test 1: Basic fetch to backend health...');
+      try {
+        const response = await fetch('http://localhost:5001/api/health');
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        addTestResult('Basic Fetch (Health Check)', true, data);
+        return true;
+      } catch (error) {
+        addTestResult('Basic Fetch (Health Check)', false, {
+          message: error.message,
+          stack: error.stack
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Test 2: Check CORS headers
+    async function testCORS() {
+      console.log('Test 2: Checking CORS headers...');
+      try {
+        const response = await fetch('http://localhost:5001/api/health');
+
+        const corsHeaders = {
+          'access-control-allow-origin': response.headers.get('access-control-allow-origin'),
+          'access-control-allow-methods': response.headers.get('access-control-allow-methods'),
+          'access-control-allow-credentials': response.headers.get('access-control-allow-credentials')
+        };
+
+        const hasOrigin = corsHeaders['access-control-allow-origin'] !== null;
+
+        if (!hasOrigin) {
+          throw new Error('No CORS headers found! Backend may not have CORS enabled.');
+        }
+
+        addTestResult('CORS Headers', true, corsHeaders);
+        return true;
+      } catch (error) {
+        addTestResult('CORS Headers', false, {
+          message: error.message
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Test 3: ChatClient availability
+    async function testChatClient() {
+      console.log('Test 3: Checking ChatClient availability...');
+      try {
+        if (typeof window.ChatClient === 'undefined') {
+          throw new Error('window.ChatClient is undefined - not loaded in bundle');
+        }
+
+        const client = new window.ChatClient();
+
+        addTestResult('ChatClient Availability', true, {
+          available: true,
+          type: typeof window.ChatClient,
+          instance: 'Created successfully'
+        });
+        return true;
+      } catch (error) {
+        addTestResult('ChatClient Availability', false, {
+          available: typeof window.ChatClient !== 'undefined',
+          type: typeof window.ChatClient,
+          error: error.message
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Test 4: ChatClient health check method
+    async function testChatClientHealth() {
+      console.log('Test 4: Testing ChatClient.checkHealth()...');
+      try {
+        if (typeof window.ChatClient === 'undefined') {
+          throw new Error('ChatClient not available');
+        }
+
+        const client = new window.ChatClient();
+        const isHealthy = await client.checkHealth();
+
+        if (!isHealthy) {
+          throw new Error('Backend health check returned false');
+        }
+
+        addTestResult('ChatClient Health Check', true, {
+          healthy: isHealthy,
+          backend: 'http://localhost:5001/api'
+        });
+        return true;
+      } catch (error) {
+        addTestResult('ChatClient Health Check', false, {
+          error: error.message
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Test 5: Full chat message
+    async function testChatMessage() {
+      console.log('Test 5: Testing full chat message...');
+      try {
+        if (typeof window.ChatClient === 'undefined') {
+          throw new Error('ChatClient not available');
+        }
+
+        const client = new window.ChatClient();
+        const startTime = Date.now();
+
+        console.log('Sending message to OpenAI...');
+        const response = await client.sendMessage('Say "test" only', 'openai');
+
+        const duration = Date.now() - startTime;
+
+        addTestResult('Full Chat Message', true, {
+          duration: `${duration}ms`,
+          model: response.model,
+          message: response.message,
+          tokens: response.usage?.total_tokens || 'N/A'
+        });
+        return true;
+      } catch (error) {
+        addTestResult('Full Chat Message', false, {
+          error: error.message,
+          stack: error.stack
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Test 6: Network connectivity
+    async function testNetworkConnectivity() {
+      console.log('Test 6: Testing network connectivity...');
+      try {
+        // Test if we can reach localhost:5001 at all
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+        const response = await fetch('http://localhost:5001/api/health', {
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        addTestResult('Network Connectivity', true, {
+          status: response.status,
+          ok: response.ok,
+          url: response.url
+        });
+        return true;
+      } catch (error) {
+        addTestResult('Network Connectivity', false, {
+          error: error.message,
+          name: error.name,
+          possibleCauses: [
+            'Backend server not running',
+            'Port 5001 blocked',
+            'Network timeout',
+            'CORS preflight failed'
+          ]
+        }, error.message);
+        return false;
+      }
+    }
+
+    // Run all tests
+    async function runAllTests() {
+      clearResults();
+
+      console.log('Starting comprehensive connectivity tests...');
+
+      // Run tests in sequence
+      await testNetworkConnectivity();
+      await testBasicFetch();
+      await testCORS();
+      await testChatClient();
+      await testChatClientHealth();
+      await testChatMessage();
+
+      console.log('All tests complete!');
+      console.log(`Passed: ${testsPassed}/${testsRun}`);
+    }
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      console.log('Test page loaded. Click "Run All Tests" to start.');
+    });
+  </script>
+</body>
+</html>
