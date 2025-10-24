@@ -34,3 +34,4 @@ bundle-report.html
 bundle-stats.json
 bundle-optimization-report.json
 lighthouse-report.json
+.vercel

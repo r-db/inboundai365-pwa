@@ -4,7 +4,6 @@ module.exports = {
     '**/*.{html,js,css,png,jpg,jpeg,svg,webp,woff,woff2}'
   ],
   swDest: 'dist/sw.js',
-  swSrc: 'src/sw.js',
   maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
 
   runtimeCaching: [

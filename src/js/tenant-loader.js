@@ -7,9 +7,19 @@
   'use strict';
   
   // Configuration
-  const API_BASE_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5001/api/subdomain'
-    : 'https://api.ib365.ai/api/subdomain';
+  const DEFAULT_API_URL = (function() {
+    if (typeof window === 'undefined') return 'https://api.ib365.ai/api';
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:5001/api';
+    }
+    if (host.endsWith('.ib365.ai') || host === 'ib365.ai') {
+      return 'https://api.ib365.ai/api';
+    }
+    return 'https://api.ib365.ai/api';
+  })();
+
+  const API_BASE_URL = `${DEFAULT_API_URL}/subdomain`;
   
   // Detect subdomain
   function getSubdomain() {
@@ -30,6 +40,14 @@
     return null;
   }
   
+  function updateFooterYear() {
+    const year = new Date().getFullYear();
+    const yearElements = document.querySelectorAll('.footer-current-year');
+    yearElements.forEach(el => {
+      el.textContent = year;
+    });
+  }
+
   // Apply theme colors
   function applyThemeColors(config) {
     const root = document.documentElement;
@@ -538,11 +556,16 @@
   // Apply configuration to page
   function applyConfiguration(config) {
     // Store tenant context globally for API requests
+    const assistantConfig = config.ai_assistant || config.chatbot || {};
+    const apiBaseUrl = config.api_base_url || assistantConfig.api_base_url || DEFAULT_API_URL;
+
     window.tenantContext = {
       tenant_id: config.tenant_id,
       business_name: config.business_name,
       subdomain: config.subdomain,
-      subdomain_status: config.subdomain_status
+      subdomain_status: config.subdomain_status,
+      api_base_url: apiBaseUrl,
+      ai_assistant: assistantConfig
     };
 
     // Apply theme first for immediate visual feedback
@@ -553,6 +576,7 @@
 
     // Update manifest with tenant-specific values
     updateManifestLink(config);
+    updateFooterYear();
 
     // Initialize admin mode if needed
     if (isAdminMode()) {

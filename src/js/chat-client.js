@@ -4,16 +4,62 @@
  */
 class ChatClient {
   constructor() {
-    // Use backend on port 5001 in development
-    this.apiBase = window.location.hostname === 'localhost' && (window.location.port === '3000' || window.location.port === '4000')
-      ? 'http://localhost:5001/api'
-      : '/api';
+    this.defaultApiBase = this.resolveDefaultApiBase();
+    this.apiBase = this.resolveApiBase();
+    console.log('[ChatClient] Using API base:', this.apiBase);
     this.conversationHistory = [];
     this.abortController = null;
     this.csrfToken = null;
+    this.availableBots = [];
+    this.activeBot = null;
+    this.conversationId = null;
 
     // Fetch CSRF token on initialization
     this.fetchCsrfToken();
+
+    // Update API base when tenant configuration loads
+    if (typeof window !== 'undefined') {
+      window.addEventListener('tenant-config-loaded', (event) => {
+        this.apiBase = this.resolveApiBase(event.detail);
+        console.log('[ChatClient] Tenant config loaded. API base set to:', this.apiBase);
+      });
+    }
+  }
+
+  resolveDefaultApiBase() {
+    if (typeof window === 'undefined') {
+      return 'https://api.ib365.ai/api';
+    }
+
+    const host = window.location.hostname;
+    const port = window.location.port;
+
+    if (host === 'localhost' || host === '127.0.0.1') {
+      if (port === '3000' || port === '4000') {
+        return 'http://localhost:5001/api';
+      }
+      return '/api';
+    }
+
+    if (host.endsWith('.ib365.ai') || host === 'ib365.ai') {
+      return 'https://api.ib365.ai/api';
+    }
+
+    return '/api';
+  }
+
+  resolveApiBase(config) {
+    if (config?.api_base_url) {
+      return config.api_base_url;
+    }
+
+    if (typeof window !== 'undefined') {
+      if (window.tenantContext?.api_base_url) {
+        return window.tenantContext.api_base_url;
+      }
+    }
+
+    return this.defaultApiBase;
   }
 
   /**
@@ -38,14 +84,21 @@ class ChatClient {
    */
   getHeaders() {
     const headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
     };
     if (this.csrfToken) {
       headers['X-CSRFToken'] = this.csrfToken;
     }
     // Add tenant ID from global tenant configuration
-    if (window.tenantContext && window.tenantContext.tenant_id) {
-      headers['X-Tenant-ID'] = window.tenantContext.tenant_id;
+    if (window.tenantContext) {
+      const { tenant_id, api_token } = window.tenantContext;
+      if (tenant_id) {
+        headers['X-Tenant-ID'] = tenant_id;
+      }
+      if (api_token) {
+        headers['Authorization'] = `Bearer ${api_token}`;
+      }
     }
     return headers;
   }
@@ -58,42 +111,12 @@ class ChatClient {
    * @returns {Promise<object>} Response from LLM
    */
   async sendMessage(message, provider = 'openai', model = null) {
-    try {
-      // Ensure we have a CSRF token
-      if (!this.csrfToken) {
-        await this.fetchCsrfToken();
-      }
-
-      const response = await fetch(`${this.apiBase}/chat`, {
-        method: 'POST',
-        headers: this.getHeaders(),
-        credentials: 'include',  // Include cookies for session
-        body: JSON.stringify({
-          message: message,
-          provider: provider,
-          model: model,
-          history: this.conversationHistory
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to send message');
-      }
-
-      const data = await response.json();
-
-      // Update conversation history
-      this.conversationHistory.push(
-        { role: 'user', content: message },
-        { role: 'assistant', content: data.message }
-      );
-
-      return data;
-    } catch (error) {
-      console.error('Chat error:', error);
-      throw error;
-    }
+    const result = await this.sendMessageInternal(message);
+    return {
+      message: result.message,
+      model: result.model,
+      usage: result.usage
+    };
   }
 
   /**
@@ -107,73 +130,14 @@ class ChatClient {
     this.abortController = new AbortController();
 
     try {
-      // Ensure we have a CSRF token
-      if (!this.csrfToken) {
-        await this.fetchCsrfToken();
+      const result = await this.sendMessageInternal(message);
+
+      if (onChunk) {
+        onChunk(result.message, result.message);
       }
 
-      const response = await fetch(`${this.apiBase}/chat/stream`, {
-        method: 'POST',
-        headers: this.getHeaders(),
-        credentials: 'include',  // Include cookies for session
-        body: JSON.stringify({
-          message: message,
-          provider: provider,
-          history: this.conversationHistory
-        }),
-        signal: this.abortController.signal
-      });
-
-      console.log('[ChatClient] Stream response status:', response.status);
-      console.log('[ChatClient] Stream response headers:', Object.fromEntries(response.headers.entries()));
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('[ChatClient] Stream error response:', errorText);
-        throw new Error(errorText || 'Failed to send message');
-      }
-
-      // Read stream
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let fullMessage = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-
-        // Process complete SSE messages
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // Keep incomplete line in buffer
-
-        for (const line of lines) {
-          console.log('[ChatClient] SSE line:', line);
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-
-              if (data.type === 'chunk') {
-                fullMessage += data.content;
-                if (onChunk) onChunk(data.content, fullMessage);
-              } else if (data.type === 'done') {
-                // Update history
-                this.conversationHistory.push(
-                  { role: 'user', content: message },
-                  { role: 'assistant', content: fullMessage }
-                );
-                if (onComplete) onComplete(fullMessage, data.model, data.usage);
-              } else if (data.type === 'error') {
-                if (onError) onError(new Error(data.error));
-              }
-            } catch (e) {
-              console.error('Failed to parse SSE:', e);
-            }
-          }
-        }
+      if (onComplete) {
+        onComplete(result.message, result.model, result.usage);
       }
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -183,6 +147,128 @@ class ChatClient {
         if (onError) onError(error);
       }
     }
+  }
+
+  async sendMessageInternal(message) {
+    try {
+      await this.ensureConversation();
+
+      const response = await fetch(
+        `${this.apiBase}/public/ai-chat/conversations/${this.conversationId}/messages`,
+        {
+          method: 'POST',
+          headers: this.getHeaders(),
+          credentials: 'include',
+          body: JSON.stringify({ message })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data?.response?.message) {
+        throw new Error(data?.error || 'Failed to send message');
+      }
+
+      const aiMessage = data.response.message;
+      const usage = data.response.tokens_used
+        ? { total_tokens: data.response.tokens_used }
+        : null;
+
+      this.conversationHistory.push(
+        { role: 'user', content: message },
+        { role: 'assistant', content: aiMessage }
+      );
+
+      return {
+        message: aiMessage,
+        model: data.response.model || null,
+        usage
+      };
+    } catch (error) {
+      console.error('Chat error:', error);
+      throw error;
+    }
+  }
+
+  async ensureConversation() {
+    if (this.conversationId) {
+      return this.conversationId;
+    }
+
+    const tenantId = this.getTenantId();
+    if (!tenantId) {
+      throw new Error('Tenant context unavailable. Chat cannot start.');
+    }
+
+    // Load bots if needed
+    if (!this.activeBot) {
+      await this.loadAvailableBots();
+    }
+
+    if (!this.activeBot) {
+      throw new Error('No AI assistant is enabled for this tenant.');
+    }
+
+    const response = await fetch(`${this.apiBase}/public/ai-chat/conversations`, {
+      method: 'POST',
+      headers: this.getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({
+        botId: this.activeBot.tenant_bot_id,
+        userName: 'Website Visitor'
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.conversation?.conversation_id) {
+      throw new Error(data?.error || 'Failed to start conversation');
+    }
+
+    this.conversationId = data.conversation.conversation_id;
+    console.log('[ChatClient] Conversation started:', this.conversationId);
+    return this.conversationId;
+  }
+
+  async loadAvailableBots() {
+    const tenantId = this.getTenantId();
+    if (!tenantId) return;
+
+    try {
+      const response = await fetch(`${this.apiBase}/public/ai-chat/bots`, {
+        headers: this.getHeaders(),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Failed to load AI bots');
+      }
+
+      this.availableBots = data.bots || [];
+
+      if (this.availableBots.length === 0) {
+        console.warn('[ChatClient] No AI bots configured for tenant.');
+        return;
+      }
+
+      const preferredBotId = window.tenantContext?.ai_assistant?.default_bot_id;
+      const matched = preferredBotId
+        ? this.availableBots.find(bot => bot.tenant_bot_id === preferredBotId)
+        : null;
+
+      this.activeBot = matched || this.availableBots[0];
+      console.log('[ChatClient] Active AI bot:', this.activeBot?.name || 'Default');
+    } catch (error) {
+      console.error('[ChatClient] Failed to load AI bots:', error);
+      this.availableBots = [];
+      this.activeBot = null;
+    }
+  }
+
+  getTenantId() {
+    return window.tenantContext?.tenant_id || null;
   }
 
   /**
@@ -229,9 +315,13 @@ class ChatClient {
    */
   async checkHealth() {
     try {
-      const response = await fetch(`${this.apiBase}/health`);
+      const response = await fetch(`${this.apiBase}/public/ai-chat/bots`, {
+        headers: this.getHeaders(),
+        credentials: 'include'
+      });
+      if (!response.ok) return false;
       const data = await response.json();
-      return data.status === 'healthy';
+      return Array.isArray(data.bots) && data.bots.length > 0;
     } catch (error) {
       return false;
     }
