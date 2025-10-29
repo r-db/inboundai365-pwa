@@ -1,0 +1,49 @@
+{
+  "tenant_id": "example-business",
+  "subdomain": "example-business",
+  "business_name": "Example Business Inc.",
+  "branding": {
+    "company_name": "Example Business",
+    "tagline": "Your trusted partner in innovation",
+    "primary_color": "#0066cc",
+    "secondary_color": "#333333",
+    "logo_url": "https://cdn.example.com/logo.svg"
+  },
+  "media_slots": {
+    "MEDIA_SLOT_1": {
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "type": "youtube",
+      "title": "Hero Demo Video - Your Journey Begins",
+      "alt": "Product demonstration showcasing key features"
+    },
+    "MEDIA_SLOT_2": {
+      "url": "https://vimeo.com/76979871",
+      "type": "vimeo",
+      "title": "Product Overview - Built for the Future",
+      "alt": "Detailed overview of platform capabilities"
+    },
+    "MEDIA_SLOT_3": {
+      "url": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800",
+      "type": "image",
+      "alt": "Offline capability demonstration showing mobile device",
+      "title": "Works Everywhere, Anytime"
+    },
+    "MEDIA_SLOT_4": {
+      "url": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800",
+      "type": "image",
+      "alt": "Modern design showcase with clean interface",
+      "title": "Beautiful by Design"
+    },
+    "MEDIA_SLOT_5": {
+      "url": "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "type": "youtube",
+      "title": "Full Product Demo - About Us",
+      "alt": "Complete walkthrough of platform features"
+    }
+  },
+  "contact_info": {
+    "phone": "1-800-555-1234",
+    "email": "contact@example.com",
+    "address": "123 Business St, Tech City, TC 12345"
+  }
+}

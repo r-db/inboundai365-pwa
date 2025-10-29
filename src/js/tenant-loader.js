@@ -143,10 +143,13 @@
     
     // Update social links
     updateSocialLinks(config.social_links);
-    
+
+    // Load media slots
+    loadMediaSlots(config);
+
     // Hide/show features based on config
     toggleFeatures(config);
-    
+
     // Apply custom CSS/JS if provided
     if (config.custom_css) {
       applyCustomCSS(config.custom_css);
@@ -375,6 +378,229 @@
     });
   }
   
+  // Load media slots from config
+  function loadMediaSlots(config) {
+    if (!config.media_slots) return;
+
+    const slots = document.querySelectorAll('[data-media-slot]');
+    slots.forEach(slot => {
+      const slotId = slot.getAttribute('data-media-slot');
+      const mediaData = config.media_slots[slotId];
+
+      if (mediaData && mediaData.url) {
+        replaceMediaPlaceholder(slot, mediaData);
+      }
+    });
+  }
+
+  // Replace media placeholder with actual media
+  function replaceMediaPlaceholder(placeholder, mediaData) {
+    const { url, poster, type, alt, title } = mediaData;
+    const mediaType = type || detectMediaType(url);
+    const container = placeholder.parentElement;
+
+    let mediaElement;
+
+    try {
+      switch (mediaType) {
+        case 'youtube':
+          mediaElement = createYouTubeEmbed(url, title);
+          break;
+        case 'vimeo':
+          mediaElement = createVimeoEmbed(url, title);
+          break;
+        case 'video':
+          mediaElement = createVideoElement(url, poster, alt);
+          break;
+        case 'image':
+          mediaElement = createImageElement(url, alt, title);
+          break;
+        default:
+          console.warn(`Unknown media type for URL: ${url}`);
+          return;
+      }
+
+      if (mediaElement) {
+        // Hide placeholder
+        placeholder.style.display = 'none';
+
+        // Insert media element after placeholder
+        placeholder.parentNode.insertBefore(mediaElement, placeholder.nextSibling);
+
+        console.log(`[TenantLoader] Loaded media slot: ${placeholder.getAttribute('data-media-slot')}`);
+      }
+    } catch (error) {
+      console.error('[TenantLoader] Error replacing media placeholder:', error);
+    }
+  }
+
+  // Detect media type from URL
+  function detectMediaType(url) {
+    if (!url) return null;
+
+    const urlLower = url.toLowerCase();
+
+    // Check for YouTube
+    if (urlLower.includes('youtube.com') || urlLower.includes('youtu.be')) {
+      return 'youtube';
+    }
+
+    // Check for Vimeo
+    if (urlLower.includes('vimeo.com')) {
+      return 'vimeo';
+    }
+
+    // Check for video extensions
+    if (urlLower.match(/\.(mp4|webm|ogg|mov)$/)) {
+      return 'video';
+    }
+
+    // Check for image extensions
+    if (urlLower.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
+      return 'image';
+    }
+
+    return null;
+  }
+
+  // Create YouTube embed
+  function createYouTubeEmbed(url, title) {
+    const videoId = extractYouTubeId(url);
+    if (!videoId) {
+      console.error('Invalid YouTube URL:', url);
+      return null;
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+    iframe.title = title || 'YouTube video';
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.frameBorder = '0';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.className = 'story-video story-video--embed';
+    iframe.style.aspectRatio = '16/9';
+
+    return iframe;
+  }
+
+  // Extract YouTube video ID from URL
+  function extractYouTubeId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\?\/\s]+)/,
+      /youtube\.com\/shorts\/([^&\?\/\s]+)/
+    ];
+
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+
+    return null;
+  }
+
+  // Create Vimeo embed
+  function createVimeoEmbed(url, title) {
+    const videoId = extractVimeoId(url);
+    if (!videoId) {
+      console.error('Invalid Vimeo URL:', url);
+      return null;
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://player.vimeo.com/video/${videoId}`;
+    iframe.title = title || 'Vimeo video';
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.frameBorder = '0';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.className = 'story-video story-video--embed';
+    iframe.style.aspectRatio = '16/9';
+
+    return iframe;
+  }
+
+  // Extract Vimeo video ID from URL
+  function extractVimeoId(url) {
+    const match = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    return match ? match[1] : null;
+  }
+
+  // Create video element for direct video files
+  function createVideoElement(url, poster, alt) {
+    const video = document.createElement('video');
+    video.className = 'story-video';
+    video.controls = true;
+    video.preload = 'metadata';
+    video.style.width = '100%';
+    video.style.height = 'auto';
+
+    if (poster) {
+      video.poster = poster;
+    }
+
+    if (alt) {
+      video.setAttribute('aria-label', alt);
+    }
+
+    // Create source element
+    const source = document.createElement('source');
+    source.src = url;
+    source.type = getVideoMimeType(url);
+
+    video.appendChild(source);
+
+    // Fallback text
+    const fallback = document.createTextNode('Your browser does not support the video tag.');
+    video.appendChild(fallback);
+
+    return video;
+  }
+
+  // Get video MIME type from URL
+  function getVideoMimeType(url) {
+    const ext = url.split('.').pop().toLowerCase();
+    const mimeTypes = {
+      'mp4': 'video/mp4',
+      'webm': 'video/webm',
+      'ogg': 'video/ogg',
+      'mov': 'video/quicktime'
+    };
+    return mimeTypes[ext] || 'video/mp4';
+  }
+
+  // Create image element with lazy loading
+  function createImageElement(url, alt, title) {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = alt || title || 'Media content';
+    img.className = 'story-image';
+    img.loading = 'lazy';
+    img.style.width = '100%';
+    img.style.height = 'auto';
+
+    if (title) {
+      img.title = title;
+    }
+
+    // Add error handling
+    img.onerror = function() {
+      console.error('[TenantLoader] Failed to load image:', url);
+      this.style.display = 'none';
+      // Show placeholder again
+      const placeholder = this.previousElementSibling;
+      if (placeholder && placeholder.classList.contains('story-media-placeholder')) {
+        placeholder.style.display = '';
+      }
+    };
+
+    return img;
+  }
+
   // Toggle features based on config
   function toggleFeatures(config) {
     // Booking widget
@@ -635,6 +861,8 @@
     updateContent,
     applyThemeColors,
     isAdminMode,
-    isPreviewMode
+    isPreviewMode,
+    loadMediaSlots,
+    replaceMediaPlaceholder
   };
 })();

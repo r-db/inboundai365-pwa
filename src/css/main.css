@@ -2324,6 +2324,21 @@ img.loaded {
   display: block;
 }
 
+/* Embedded video iframes (YouTube, Vimeo) */
+.story-video--embed {
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-lg);
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.story-chapter__media--fullwidth .story-video--embed {
+  border-radius: 0;
+  aspect-ratio: 21 / 9;
+}
+
 .story-image {
   object-fit: cover;
   aspect-ratio: 16 / 9;

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!-- Essential Meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Voice Agent Builder | InboundAI365</title>
+  <meta name="description" content="Build and manage conversational AI voice agents with AVEENA">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://ib365.ai/agents">
+
+  <!-- Google Fonts - Museo Moderno -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Museo+Moderno:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Voice Agent Builder | InboundAI365">
+  <meta property="og:description" content="Build conversational AI voice agents">
+  <meta property="og:url" content="https://ib365.ai/agents">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a51a4">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+</head>
+<body>
+  <!-- Skip to main content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__container container">
+      <a href="/" class="logo">InboundAI365</a>
+
+      <nav class="nav-primary" role="navigation" aria-label="Main">
+        <a href="/" class="nav-link" data-transition="slide">Home</a>
+        <a href="/about" class="nav-link" data-transition="fade">About</a>
+        <a href="/features" class="nav-link">Features</a>
+        <a href="/docs" class="nav-link" data-transition="slide">Documentation</a>
+        <a href="/agents" class="nav-link active" data-transition="slide">Agents</a>
+        <a href="/contact" class="nav-link" data-transition="slide">Aveena</a>
+      </nav>
+
+      <div class="header__actions">
+        <button id="install-button" class="btn btn--primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Install App
+        </button>
+
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span id="theme-icon-light" class="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </span>
+          <span id="theme-icon-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="nav-menu" class="nav-mobile hidden">
+      <nav class="container">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/about" class="nav-link">About</a>
+        <a href="/features" class="nav-link">Features</a>
+        <a href="/docs" class="nav-link">Documentation</a>
+        <a href="/agents" class="nav-link active">Agents</a>
+        <a href="/contact" class="nav-link" data-transition="slide">Aveena</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" tabindex="-1">
+    <!-- Page Header -->
+    <section class="page-header">
+      <div class="container">
+        <h1 class="page-header__title">Voice Agent Builder</h1>
+        <p class="page-header__subtitle">
+          Create and manage your AVEENA conversational AI agents
+        </p>
+      </div>
+    </section>
+
+    <!-- Agent Builder Section -->
+    <section class="section">
+      <div class="container" style="max-width: 1400px;">
+
+        <!-- Agent List Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <div>
+            <h2 style="margin: 0; font-size: 1.5rem;">My Agents</h2>
+            <p style="margin: 0.5rem 0 0 0; color: var(--color-text-muted);">Manage your conversational AI voice agents</p>
+          </div>
+          <button id="new-agent-btn" class="btn btn--primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+            Create New Agent
+          </button>
+        </div>
+
+        <!-- Agents Grid -->
+        <div id="agents-grid" class="agents-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+          <!-- Agent cards will be dynamically inserted here -->
+          <div class="loading-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p style="color: var(--color-text-muted);">Loading agents...</p>
+          </div>
+        </div>
+
+        <!-- Agent Builder Modal -->
+        <div id="agent-modal" class="modal hidden" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto;">
+          <div class="modal-content" style="background: var(--color-background); margin: 2rem auto; max-width: 900px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+
+            <!-- Modal Header -->
+            <div class="modal-header" style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--color-gray-800); display: flex; justify-content: space-between; align-items: center;">
+              <h2 id="modal-title" style="margin: 0; font-size: 1.5rem;">Create New Agent</h2>
+              <button id="close-modal" class="btn-icon" aria-label="Close modal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+              </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" style="padding: 2rem;">
+              <form id="agent-form">
+
+                <!-- Basic Info Section -->
+                <div class="form-section" style="margin-bottom: 2rem;">
+                  <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Basic Information</h3>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="agent-name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Agent Name *</label>
+                    <input
+                      type="text"
+                      id="agent-name"
+                      name="name"
+                      required
+                      placeholder="e.g., Customer Support Agent"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="first-message" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">First Message *</label>
+                    <textarea
+                      id="first-message"
+                      name="first_message"
+                      required
+                      rows="2"
+                      placeholder="e.g., Hi! I'm here to help. What can I do for you today?"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text); resize: vertical;"
+                    ></textarea>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="system-prompt" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">System Prompt *</label>
+                    <textarea
+                      id="system-prompt"
+                      name="system_prompt"
+                      required
+                      rows="6"
+                      placeholder="Define your agent's personality, role, and behavior..."
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text); font-family: monospace; resize: vertical;"
+                    ></textarea>
+                    <small style="color: var(--color-text-muted); display: block; margin-top: 0.25rem;">
+                      Tip: Load AVEENA's preset personality templates using the buttons below
+                    </small>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                      <button type="button" class="btn btn--secondary btn--sm load-template" data-template="receptionist">
+                        Load Receptionist Template
+                      </button>
+                      <button type="button" class="btn btn--secondary btn--sm load-template" data-template="sales">
+                        Load Sales Template
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Voice Settings Section -->
+                <div class="form-section" style="margin-bottom: 2rem;">
+                  <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Voice Settings</h3>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="voice-id" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Voice *</label>
+                    <select
+                      id="voice-id"
+                      name="voice_id"
+                      required
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                      <option value="">Select a voice...</option>
+                      <option value="21m00Tcm4TlvDq8ikWAM">Rachel - American Female</option>
+                      <option value="AZnzlk1XvdvUeBnXmlld">Domi - American Female</option>
+                      <option value="EXAVITQu4vr4xnSDxMaL">Bella - American Female</option>
+                      <option value="ErXwobaYiN019PkySvjV">Antoni - American Male</option>
+                      <option value="MF3mGyEYCl7XYWbV9V6O">Elli - American Female</option>
+                      <option value="TxGEqnHWrfWFTfGW9XjX">Josh - American Male</option>
+                      <option value="VR6AewLTigWG4xSOukaG">Arnold - American Male</option>
+                      <option value="pNInz6obpgDQGcFmaJgB">Adam - American Male</option>
+                      <option value="yoZ06aMxZJJ28mfd3POQ">Sam - American Male</option>
+                    </select>
+                    <small style="color: var(--color-text-muted); display: block; margin-top: 0.25rem;">
+                      More voices available in your ElevenLabs account
+                    </small>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                      <label for="voice-stability" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Stability: <span id="stability-value">0.5</span>
+                      </label>
+                      <input
+                        type="range"
+                        id="voice-stability"
+                        name="stability"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.5"
+                        style="width: 100%;"
+                      >
+                      <small style="color: var(--color-text-muted);">Lower = more variable, Higher = more stable</small>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="voice-similarity" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Similarity: <span id="similarity-value">0.75</span>
+                      </label>
+                      <input
+                        type="range"
+                        id="voice-similarity"
+                        name="similarity"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.75"
+                        style="width: 100%;"
+                      >
+                      <small style="color: var(--color-text-muted);">Voice consistency to original</small>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 1rem;">
+                    <label for="voice-speed" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                      Speaking Speed: <span id="speed-value">1.0</span>x
+                    </label>
+                    <input
+                      type="range"
+                      id="voice-speed"
+                      name="speed"
+                      min="0.7"
+                      max="1.3"
+                      step="0.1"
+                      value="1.0"
+                      style="width: 100%;"
+                    >
+                    <small style="color: var(--color-text-muted);">0.7x (slower) to 1.3x (faster)</small>
+                  </div>
+                </div>
+
+                <!-- LLM Configuration Section -->
+                <div class="form-section" style="margin-bottom: 2rem;">
+                  <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Language Model</h3>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="llm-provider" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">LLM Provider *</label>
+                    <select
+                      id="llm-provider"
+                      name="llm_provider"
+                      required
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic (Claude)</option>
+                      <option value="google">Google (Gemini)</option>
+                      <option value="elevenlabs">ElevenLabs (Turbo)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="llm-model" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Model *</label>
+                    <select
+                      id="llm-model"
+                      name="llm_model"
+                      required
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                      <option value="gpt-4o">GPT-4o (Recommended)</option>
+                      <option value="gpt-4o-mini">GPT-4o Mini</option>
+                      <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                      <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    </select>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                      <label for="llm-temperature" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        Temperature: <span id="temp-value">0.9</span>
+                      </label>
+                      <input
+                        type="range"
+                        id="llm-temperature"
+                        name="temperature"
+                        min="0"
+                        max="2"
+                        step="0.1"
+                        value="0.9"
+                        style="width: 100%;"
+                      >
+                      <small style="color: var(--color-text-muted);">Lower = focused, Higher = creative</small>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="llm-max-tokens" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Max Tokens</label>
+                      <input
+                        type="number"
+                        id="llm-max-tokens"
+                        name="max_tokens"
+                        min="50"
+                        max="1000"
+                        value="400"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                      >
+                      <small style="color: var(--color-text-muted);">Response length limit</small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Language & Conversation Settings -->
+                <div class="form-section" style="margin-bottom: 2rem;">
+                  <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Language & Conversation</h3>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="language" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Primary Language *</label>
+                    <select
+                      id="language"
+                      name="language"
+                      required
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="fr">French</option>
+                      <option value="de">German</option>
+                      <option value="it">Italian</option>
+                      <option value="pt">Portuguese</option>
+                      <option value="pl">Polish</option>
+                      <option value="tr">Turkish</option>
+                      <option value="ru">Russian</option>
+                      <option value="nl">Dutch</option>
+                      <option value="cs">Czech</option>
+                      <option value="ar">Arabic</option>
+                      <option value="zh">Chinese</option>
+                      <option value="ja">Japanese</option>
+                      <option value="ko">Korean</option>
+                      <option value="hi">Hindi</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                      <input
+                        type="checkbox"
+                        id="multilingual"
+                        name="multilingual"
+                        style="margin-right: 0.5rem;"
+                      >
+                      <span>Enable multilingual support</span>
+                    </label>
+                    <small style="color: var(--color-text-muted); display: block; margin-left: 1.5rem;">
+                      Agent can automatically detect and respond in multiple languages
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Advanced Settings -->
+                <details class="form-section" style="margin-bottom: 2rem;">
+                  <summary style="cursor: pointer; font-weight: 600; font-size: 1.125rem; margin-bottom: 1rem;">Advanced Settings</summary>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="webhook-url" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Webhook URL</label>
+                    <input
+                      type="url"
+                      id="webhook-url"
+                      name="webhook_url"
+                      placeholder="https://yourdomain.com/webhooks/elevenlabs"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                    <small style="color: var(--color-text-muted); display: block; margin-top: 0.25rem;">
+                      Receive conversation events and tool calls
+                    </small>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="max-duration" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Max Conversation Duration (seconds)</label>
+                    <input
+                      type="number"
+                      id="max-duration"
+                      name="max_duration"
+                      min="60"
+                      max="3600"
+                      value="300"
+                      placeholder="300"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-gray-700); border-radius: 6px; background: var(--color-surface); color: var(--color-text);"
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                      <input
+                        type="checkbox"
+                        id="enable-auth"
+                        name="enable_auth"
+                        style="margin-right: 0.5rem;"
+                      >
+                      <span>Require Authentication</span>
+                    </label>
+                    <small style="color: var(--color-text-muted); display: block; margin-left: 1.5rem;">
+                      Protect your agent from unauthorized access
+                    </small>
+                  </div>
+                </details>
+
+                <!-- Form Actions -->
+                <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--color-gray-800);">
+                  <button type="button" id="cancel-agent" class="btn btn--secondary">Cancel</button>
+                  <button type="submit" id="save-agent" class="btn btn--primary">
+                    <span id="save-text">Create Agent</span>
+                    <span id="save-loading" class="hidden">
+                      <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                      Saving...
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Agent Modal -->
+        <div id="test-modal" class="modal hidden" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000;">
+          <div class="modal-content" style="background: var(--color-background); margin: 2rem auto; max-width: 600px; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--color-gray-800); display: flex; justify-content: space-between; align-items: center;">
+              <h2 style="margin: 0; font-size: 1.5rem;">Test Agent</h2>
+              <button id="close-test-modal" class="btn-icon" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+              </button>
+            </div>
+            <div class="modal-body" style="padding: 2rem; text-align: center;">
+              <p style="margin-bottom: 1.5rem; color: var(--color-text-muted);">
+                Test your agent with a simulated conversation or copy the agent ID to use in your application.
+              </p>
+              <div id="test-agent-id" style="padding: 1rem; background: var(--color-surface); border-radius: 6px; margin-bottom: 1.5rem; font-family: monospace; word-break: break-all;"></div>
+              <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="copy-agent-id" class="btn btn--secondary">
+                  Copy Agent ID
+                </button>
+                <button id="simulate-conversation" class="btn btn--primary">
+                  Simulate Conversation
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer footer--enhanced">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__column">
+          <h3 class="footer__heading" data-tenant="branding.company_name">InboundAI365</h3>
+          <p class="footer__description" data-tenant="branding.tagline">
+            Complete business operating system with AI receptionist, CRM, and intelligence built for healthcare and home services.
+          </p>
+          <div class="footer__social">
+            <span class="footer__label">Powered by <a href="https://riscent.com" target="_blank" rel="noopener noreferrer" class="footer__link">Riscent, LLC</a></span>
+          </div>
+        </div>
+
+        <div class="footer__column">
+          <h3 class="footer__heading">Features</h3>
+          <ul class="footer__list">
+            <li><a href="/features" class="footer__link">All Features</a></li>
+            <li><a href="/features#hipaa-compliance" class="footer__link">HIPAA Compliance</a></li>
+            <li><a href="/features#how-it-works" class="footer__link">How It Works</a></li>
+            <li><a href="/contact" class="footer__link">AI Receptionist Demo</a></li>
+            <li><a href="/about" class="footer__link">About InboundAI365</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__column">
+          <h3 class="footer__heading">Resources</h3>
+          <ul class="footer__list">
+            <li><a href="/docs" class="footer__link">Documentation</a></li>
+            <li><a href="/about" class="footer__link">About Us</a></li>
+            <li><a href="/features" class="footer__link">Features</a></li>
+            <li><a href="/contact" class="footer__link">Get Started</a></li>
+            <li><a href="/chat" class="footer__link">Modern Chat Experience</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__column">
+          <h3 class="footer__heading">Support</h3>
+          <ul class="footer__list">
+            <li><a href="/contact" class="footer__link">Contact Us</a></li>
+            <li><a href="/privacy" class="footer__link">Privacy Policy</a></li>
+            <li><a href="/terms" class="footer__link">Terms of Service</a></li>
+            <li><a data-tenant="contact_info.email" href="mailto:support@ib365.ai" class="footer__link">support@ib365.ai</a></li>
+            <li><a data-tenant="contact_info.phone" href="tel:+18005551234" class="footer__link">1-800-555-1234</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__column">
+          <h3 class="footer__heading">Why Choose Us</h3>
+          <ul class="footer__list footer__list--stats">
+            <li>24/7 Coverage</li>
+            <li>Same-Day Setup</li>
+            <li>50% Cost Savings</li>
+            <li>Bilingual Agents</li>
+            <li>HIPAA Ready</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copyright">
+          &copy; <span class="footer-current-year">2025</span> <span data-tenant="branding.company_name">InboundAI365</span>. All rights reserved.
+        </p>
+        <p class="footer__tagline">
+          Your most dependable team member. Never quits. Never calls in sick.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ARIA Live Region for Announcements -->
+  <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <style>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--color-text);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: var(--color-gray-800);
+    }
+
+    .agent-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-gray-800);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .agent-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .agent-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .agent-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .agent-card-id {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: monospace;
+    }
+
+    .agent-card-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .agent-card-body {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .agent-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-gray-800);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-badge.active {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .status-badge.inactive {
+      background: rgba(107, 114, 128, 0.1);
+      color: #6b7280;
+    }
+  </style>
+</body>
+</html>
